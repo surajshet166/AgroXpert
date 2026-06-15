@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AgroXpert Reset Password</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: url("{{ url_for('static', filename='images/bg-agriculture.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(27, 94, 32, 0.75);
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.container {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 15px;
+    width: 350px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-bottom: 5px;
+}
+
+.tagline {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #dcedc8;
+}
+
+.input-box {
+    position: relative;
+    margin: 15px 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #1b5e20;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #c8e6c9;
+}
+
+.error {
+    color: #ffcccc;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.success {
+    color: #c8e6c9;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.link a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 25px 20px;
+    }
+    .logo { font-size: 32px; }
+    h2 { font-size: 1.3rem; }
+    .tagline { font-size: 12px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="logo">🔐</div>
+    <h2>AgroXpert</h2>
+    <div class="tagline">Reset Your Password Securely</div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="error">{{ messages[0] }}</div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <div class="input-box">
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+
+        <div class="input-box">
+            <input type="password" name="new_password" placeholder="New Password" required>
+        </div>
+        <div class="input-box">
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        </div>
+        <button name="action" value="reset_password">Reset Password</button>
+
+    </form>
+
+    <div class="link">
+        Back to <a href="/login">Login</a>
+    </div>
+</div>
+
+</body>
+</html>

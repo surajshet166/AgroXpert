@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroXpert - Analysis Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #66bb6a;
+            --dark-green: #1b5e20;
+            --accent-green: #4caf50;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("{{ url_for('static', filename='images/bg-agriculture.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(27, 94, 32, 0.7);
+            z-index: 0;
+        }
+
+        .navbar, .container, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            padding: 50px 5%;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--light-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .result-item b {
+            font-size: 1.4rem;
+            color: white;
+        }
+
+        .status-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid;
+        }
+
+        .status-box.safe {
+            border-left-color: var(--light-green);
+        }
+
+        .status-box.unsafe {
+            border-left-color: #ff5252;
+        }
+
+        .status-box h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .status-box p {
+            margin-bottom: 0;
+            font-size: 0.85rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--dark-green);
+        }
+
+        .btn-primary:hover {
+            background: var(--light-green);
+            color: white;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--white);
+            color: var(--white);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container { padding: 40px 4%; }
+        }
+        @media (max-width: 992px) {
+            .container { padding: 35px 3.5%; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 30px 3%; }
+            .card { padding: 30px 25px; border-radius: 15px; max-width: 100%; }
+            .card h2 { font-size: 1.5rem; }
+            .result-grid { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px 2.5%; }
+            .card { padding: 20px 18px; border-radius: 12px; }
+            .card h2 { font-size: 1.25rem; }
+            .result-item { padding: 15px; }
+            .result-item b { font-size: 1.2rem; }
+            .btn { padding: 10px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <div class="card">
+            <h2><i class="fa-solid fa-square-poll-vertical"></i> Analysis Results</h2>
+            <p>Based on the data provided, here is your detailed agricultural analysis.</p>
+
+            <div class="result-grid">
+                <div class="result-item">
+                    <span>Recommended Crop</span>
+                    <b>🌾 {{ crop }}</b>
+                </div>
+                <div class="result-item">
+                    <span>Soil Type</span>
+                    <b>🧱 {{ soil }}</b>
+                </div>
+            </div>
+
+            <div class="status-box {% if contamination == 'Safe' %}safe{% else %}unsafe{% endif %}">
+                <h3>
+                    {% if contamination == 'Safe' %}
+                    <i class="fa-solid fa-circle-check" style="color: var(--light-green);"></i> Safe for Farming
+                    {% else %}
+                    <i class="fa-solid fa-circle-exclamation" style="color: #ff5252;"></i> Contamination Detected
+                    {% endif %}
+                </h3>
+                <p>
+                    {% if contamination == 'Safe' %}
+                    Your soil parameters are within the healthy range for sustainable agriculture.
+                    {% else %}
+                    Warning: Some soil parameters are outside the safe range. Consider soil treatment before planting.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="btn-group">
+                <a href="/predict" class="btn btn-primary"><i class="fa-solid fa-rotate-right"></i> New Analysis</a>
+                <a href="/download_crop_report" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> Download Report</a>
+                <a href="/dashboard" class="btn btn-outline"><i class="fa-solid fa-house"></i> Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); font-size: 0.8rem; margin-top: auto;">
+        <p>&copy; 2026 AgroXpert. All rights reserved. | Sustainable Farming Companion</p>
+    </footer>
+
+</body>
+</html>

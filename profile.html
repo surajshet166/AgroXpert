@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroXpert - User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #66bb6a;
+            --dark-green: #1b5e20;
+            --accent-green: #4caf50;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("{{ url_for('static', filename='images/bg-agriculture.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(27, 94, 32, 0.7);
+            z-index: 0;
+        }
+
+        .navbar, .container, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            padding: 50px 5%;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: var(--light-green);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--light-green);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group input[readonly] {
+            background: rgba(0, 0, 0, 0.2);
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .btn-update {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            background: var(--white);
+            color: var(--dark-green);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-update:hover {
+            background: var(--light-green);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container { padding: 40px 4%; }
+        }
+        @media (max-width: 992px) {
+            .container { padding: 35px 3.5%; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 30px 3%; }
+            .card { padding: 30px 25px; border-radius: 15px; max-width: 100%; }
+            .card h2 { font-size: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px 2.5%; }
+            .card { padding: 20px 18px; border-radius: 12px; }
+            .card h2 { font-size: 1.25rem; }
+            .btn-update { padding: 12px; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <div class="card">
+            <h2><i class="fa-solid fa-user-gear"></i> User Profile</h2>
+            <p>View and manage your personal account settings and farming location.</p>
+
+            <form method="POST">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-id-card"></i> Full Name</label>
+                        <input type="text" name="name" value="{{ user[0] }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-at"></i> Username</label>
+                        <input type="text" value="{{ user[1] }}" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                        <input type="email" name="email" value="{{ user[4] }}" placeholder="Update your email">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
+                        <input type="text" value="{{ user[3] }}" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label><i class="fa-solid fa-location-dot"></i> Primary Farming Location</label>
+                    <input type="text" name="location" value="{{ user[5] }}" placeholder="e.g. Bangalore, India">
+                </div>
+
+                <button type="submit" class="btn-update">
+                    <i class="fa-solid fa-floppy-disk"></i> Update Profile Information
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); font-size: 0.8rem; margin-top: auto;">
+        <p>&copy; 2026 AgroXpert. All rights reserved. | Sustainable Farming Companion</p>
+    </footer>
+
+</body>
+</html>

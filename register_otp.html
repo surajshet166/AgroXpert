@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AgroXpert - Verify OTP</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body {
+    height: 100vh;
+    background: linear-gradient(-45deg, #2e7d32, #66bb6a, #1b5e20, #4caf50);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+.container {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 15px;
+    width: 350px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.input-box {
+    margin: 20px 0;
+}
+.input-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: white;
+    color: #1b5e20;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    background: #c8e6c9;
+}
+.error {
+    color: #ffcccc;
+    margin-bottom: 10px;
+}
+.info {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    color: #dcedc8;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>📱 Verify OTP</h2>
+    <p class="info">An OTP has been sent to your mobile number ending in <b>{{ mobile[-4:] }}</b></p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="error">{{ messages[0] }}</div>
+        {% endif %}
+    {% endwith %}
+
+    <form action="/register" method="post">
+        <input type="hidden" name="action" value="verify_otp">
+        <div class="input-box">
+            <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}">
+        </div>
+        <button type="submit">Verify & Register</button>
+    </form>
+    
+    <div style="margin-top: 20px;">
+        <a href="/register" style="color: white; text-decoration: none; font-size: 0.8rem;">← Back to Register</a>
+    </div>
+</div>
+</body>
+</html>

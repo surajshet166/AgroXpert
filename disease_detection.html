@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroXpert - Disease Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #66bb6a;
+            --dark-green: #1b5e20;
+            --accent-green: #4caf50;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("{{ url_for('static', filename='images/bg-agriculture.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(27, 94, 32, 0.7);
+            z-index: 0;
+        }
+
+        .navbar, .container, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            padding: 50px 5%;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--glass-border);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--light-green);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--light-green);
+        }
+
+        .upload-area p {
+            margin: 0;
+        }
+
+        #image-preview {
+            display: none;
+            margin-top: 20px;
+            border-radius: 10px;
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .btn-detect {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            background: var(--white);
+            color: var(--dark-green);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-detect:hover {
+            background: var(--light-green);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid var(--light-green);
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container { padding: 40px 4%; }
+        }
+        @media (max-width: 992px) {
+            .container { padding: 35px 3.5%; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 30px 3%; }
+            .card { padding: 30px 25px; border-radius: 15px; max-width: 100%; }
+            .card h2 { font-size: 1.5rem; }
+            .upload-area { padding: 30px 20px; }
+            .upload-area i { font-size: 2.5rem; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px 2.5%; }
+            .card { padding: 20px 18px; border-radius: 12px; }
+            .card h2 { font-size: 1.25rem; }
+            .upload-area { padding: 25px 15px; }
+            .upload-area i { font-size: 2rem; }
+            .btn-detect { padding: 12px; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <div class="card">
+            <h2><i class="fa-solid fa-bug"></i> Disease Detection</h2>
+            <p>Upload a plant leaf image to detect diseases (demo mode).</p>
+
+            <form action="/disease" method="post" enctype="multipart/form-data">
+                <div class="upload-area" onclick="document.getElementById('plant-image').click()">
+                    <i class="fa-solid fa-cloud-upload-alt"></i>
+                    <p>Click to upload plant leaf image</p>
+                    <input type="file" id="plant-image" name="plant_image" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                </div>
+                <img id="image-preview" alt="Preview">
+                <button type="submit" class="btn-detect">
+                    <i class="fa-solid fa-search"></i> Detect Disease
+                </button>
+            </form>
+
+            {% if result %}
+            <div class="result-box">
+                <h3>Detection Result</h3>
+                <p style="font-size: 1.5rem; font-weight: bold; margin-top: 10px; color: white;">{{ result }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); font-size: 0.8rem; margin-top: auto;">
+        <p>&copy; 2026 AgroXpert. All rights reserved. | Sustainable Farming Companion</p>
+    </footer>
+
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('image-preview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroXpert - Your Smart Farming Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #66bb6a;
+            --dark-green: #1b5e20;
+            --accent-green: #4caf50;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("{{ url_for('static', filename='images/bg-home.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--white);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 87, 64, 0.8);
+            z-index: 0;
+        }
+
+        nav, .hero, .features, .how-it-works, .stats, .faq, .contact, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navigation */
+        nav {
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--white);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.4s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .btn-login:hover {
+            background: var(--white);
+            color: var(--dark-green);
+        }
+
+        .btn-register {
+            background: var(--white);
+            color: var(--dark-green);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            color: #e8f5e9;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px 10%;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transition: 0.4s;
+            cursor: default;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .feature-card i {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #c8e6c9;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #f1f8e9;
+            line-height: 1.5;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 10%;
+            background: rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .how-it-works h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .step-num {
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            color: var(--dark-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 60px 10%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-item h2 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            color: #c8e6c9;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 80px 15%;
+        }
+
+        .faq h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        .faq-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.3s ease;
+            background: rgba(0, 0, 0, 0.1);
+            color: #e8f5e9;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 10%;
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .contact-info, .contact-form {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-details {
+            margin-top: 30px;
+        }
+
+        .contact-details div {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .contact-form form {
+            background: var(--glass-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .contact-form input::placeholder, .contact-form textarea::placeholder {
+            color: #f1f8e9;
+        }
+
+        .contact-form button {
+            width: 100%;
+            background: var(--white);
+            color: var(--dark-green);
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .contact-form button:hover {
+            background: #c8e6c9;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero h1 { font-size: 3rem; }
+        }
+        @media (max-width: 992px) {
+            nav { padding: 15px 30px; }
+            .nav-links { gap: 20px; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .how-it-works, .features, .stats, .faq, .contact { padding: 60px 5%; }
+        }
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .features { padding: 40px 5%; }
+            .steps-container { flex-direction: column; }
+            .contact { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            nav { padding: 12px 15px; }
+            .logo a { font-size: 18px; }
+            .auth-buttons .btn { padding: 8px 16px; font-size: 0.9rem; }
+            .hero { padding: 40px 15px; }
+            .hero h1 { font-size: 1.75rem; }
+            .hero p { font-size: 0.95rem; }
+            .feature-card { padding: 30px; }
+            .card h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-seedling"></i> AgroXpert
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about-us">About Us</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">Process</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-login">Login</a>
+            <a href="/register" class="btn btn-register">Get Started</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Empowering Farmers with Technology</h1>
+        <p>Your all-in-one platform for smart agriculture. Predict the best crops for your soil and ensure soil safety with data-driven insights.</p>
+        <div class="hero-btns">
+            <a href="/register" class="btn btn-register" style="padding: 15px 40px; font-size: 1.1rem;">Start Your Journey</a>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="how-it-works" id="about-us" style="background: rgba(255, 255, 255, 0.05); padding: 100px 10%;">
+        <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px; text-align: left;">
+                <h2 style="font-size: 2.8rem; margin-bottom: 25px; line-height: 1.2;">Cultivating the <span style="color: var(--light-green);">Future</span> of Agriculture</h2>
+                <p style="font-size: 1.1rem; color: #e8f5e9; margin-bottom: 20px; line-height: 1.8;">
+                    At AgroXpert, we believe that the backbone of our nation—our farmers—deserve the most advanced tools to succeed. Founded in 2026, our mission is to bridge the gap between traditional farming and modern data science.
+                </p>
+                <p style="font-size: 1.1rem; color: #e8f5e9; line-height: 1.8;">
+                    We combine machine learning, real-time weather data, and agricultural expertise to provide actionable insights that help farmers increase yield, reduce costs, and build a more sustainable future.
+                </p>
+                <div style="margin-top: 30px; display: flex; gap: 40px;">
+                    <div>
+                        <h3 style="font-size: 2rem; color: var(--light-green);">100%</h3>
+                        <p style="font-size: 0.9rem; color: #ccc;">Data Driven</p>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 2rem; color: var(--light-green);">Secure</h3>
+                        <p style="font-size: 0.9rem; color: #ccc;">User Privacy</p>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <div style="background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); position: relative; overflow: hidden;">
+                    <i class="fa-solid fa-quote-left" style="position: absolute; top: 20px; left: 20px; font-size: 4rem; opacity: 0.1;"></i>
+                    <h4 style="font-size: 1.4rem; font-style: italic; margin-bottom: 20px; position: relative; z-index: 1;">"Our goal is to make precision agriculture accessible to every farmer, regardless of their farm size or technical expertise."</h4>
+                    <p style="font-weight: 600; color: var(--light-green);">— The AgroXpert Team</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature-card">
+            <i class="fa-solid fa-microscope"></i>
+            <h3>Soil Safety Check</h3>
+            <p>Analyze your soil's pH and nutrient levels to ensure it's healthy and safe for cultivation.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fa-solid fa-leaf"></i>
+            <h3>Crop Prediction</h3>
+            <p>Get AI-powered recommendations on the most suitable crops based on weather and soil conditions.</p>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-item">
+            <h2>500+</h2>
+            <p>Farmers Empowered</p>
+        </div>
+        <div class="stat-item">
+            <h2>90%</h2>
+            <p>Prediction Accuracy</p>
+        </div>
+        <div class="stat-item">
+            <h2>24/7</h2>
+            <p>Expert Support</p>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h4>Register</h4>
+                <p>Create your account with your mobile number and location.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h4>Input Data</h4>
+                <p>Provide soil parameters or upload crop images for analysis.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h4>Get Results</h4>
+                <p>Receive instant, AI-driven insights and recommendations.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <div class="faq-question">How accurate is the crop prediction? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+                <p style="padding-bottom: 20px;">Our Random Forest model is trained on extensive agricultural datasets, achieving over 95% accuracy in recommending suitable crops based on soil and weather conditions.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Is my data secure? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+                <p style="padding-bottom: 20px;">Yes, we use secure database management and encrypted sessions to ensure your personal and agricultural data remains private.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="contact-info">
+            <h2>Get In Touch</h2>
+            <p>Have questions or need assistance? Our team is here to help you grow better.</p>
+            <div class="contact-details">
+                <div><i class="fa-solid fa-envelope"></i> supportagroxpert@gmail.com</div>
+                <div><i class="fa-solid fa-phone"></i> +91 9876543210</div>
+                <div><i class="fa-solid fa-location-dot"></i> AgroXpert Private ltd, Honnavar, Karnataka, India</div>
+            </div>
+        </div>
+        <div class="contact-form">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <script>
+            alert("{{ messages[0] }}");
+            </script>
+            {% endif %}
+            {% endwith %}
+            <form action="/send_message" method="POST">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <input type="tel" name="mobile" placeholder="Your Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer id="about">
+        <p>&copy; 2026 AgroXpert. All rights reserved. | Built for Sustainable Agriculture 🌾</p>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
+                
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    document.querySelectorAll('.faq-answer').forEach(ans => ans.style.maxHeight = null);
+                    document.querySelectorAll('.faq-question i').forEach(i => i.style.transform = 'rotate(0deg)');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

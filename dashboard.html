@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroXpert Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #66bb6a;
+            --dark-green: #1b5e20;
+            --accent-green: #4caf50;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("{{ url_for('static', filename='images/bg-agriculture.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(27, 94, 32, 0.7);
+            z-index: 0;
+        }
+
+        .navbar, .dashboard-container, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            padding: 30px 5%;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* Sidebar/Quick Actions */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Weather Card */
+        .weather-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .weather-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .weather-item i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--light-green);
+        }
+
+        .weather-item span {
+            display: block;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .weather-item b {
+            font-size: 1.1rem;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--light-green);
+            transform: translateY(-5px);
+        }
+
+        .service-card i {
+            font-size: 30px;
+            margin-bottom: 15px;
+            color: var(--light-green);
+        }
+
+        /* Activity List */
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-info p {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .activity-result {
+            font-weight: 600;
+            color: var(--light-green);
+            font-size: 0.9rem;
+        }
+
+        /* Fertilizer Calculator Section */
+        .calc-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .calc-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .calc-group label {
+            font-size: 0.8rem;
+            color: var(--light-green);
+        }
+
+        .calc-group input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            outline: none;
+        }
+
+        .calc-btn {
+            grid-column: span 2;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: var(--white);
+            color: var(--dark-green);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .calc-btn:hover {
+            background: var(--light-green);
+            color: white;
+        }
+
+        .calc-result {
+            grid-column: span 2;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(102, 187, 106, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        /* Knowledge Cards */
+        .knowledge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .knowledge-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-top: 3px solid var(--light-green);
+        }
+
+        .knowledge-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            color: var(--light-green);
+        }
+
+        .knowledge-card p {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #eee;
+        }
+
+        /* Tips Section */
+        .tip-card {
+            background: linear-gradient(45deg, var(--dark-green), var(--primary-green));
+            border-left: 5px solid var(--light-green);
+        }
+
+        .tip-card p {
+            font-style: italic;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-green);
+        }
+
+        .profile-info h2 {
+            font-size: 1.5rem;
+        }
+
+        .profile-info p {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-container { padding: 25px 4%; }
+        }
+        @media (max-width: 992px) {
+            .dashboard-container { grid-template-columns: 1fr; padding: 20px 3%; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-container { padding: 15px 3%; gap: 20px; }
+            .card { padding: 20px; border-radius: 15px; }
+            .profile-header { flex-direction: column; text-align: center; gap: 15px; }
+            .profile-info h2 { font-size: 1.25rem; }
+            .weather-card { grid-template-columns: repeat(2, 1fr); }
+            .calc-form { grid-template-columns: 1fr; }
+            .calc-btn { grid-column: span 1; }
+            .knowledge-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .activity-item { flex-direction: column; gap: 8px; align-items: flex-start; }
+        }
+        @media (max-width: 480px) {
+            .dashboard-container { padding: 12px 2.5%; gap: 15px; }
+            .card { padding: 15px; border-radius: 12px; }
+            .card-header h3 { font-size: 1rem; }
+            .weather-card { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .profile-avatar { width: 50px; height: 50px; font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <div class="dashboard-container">
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            
+            <div class="profile-header">
+                <div class="profile-avatar">{{ user[0][0]|upper }}</div>
+                <div class="profile-info">
+                    <h2>Welcome Back, {{ user[0] }} 👋</h2>
+                    <p><i class="fa-solid fa-location-dot"></i> {{ city }} | Member since 2026</p>
+                </div>
+            </div>
+
+            <!-- Weather Card -->
+            <div class="card" style="margin-bottom: 30px;">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-cloud-sun"></i> Live Weather Insights</h3>
+                    <span style="font-size: 0.8rem; color: #ccc;">Last updated: Just now</span>
+                </div>
+                <div class="weather-card">
+                    <div class="weather-item">
+                        <i class="fa-solid fa-temperature-high"></i>
+                        <span>Temperature</span>
+                        <b>{{ temp }}°C</b>
+                    </div>
+                    <div class="weather-item">
+                        <i class="fa-solid fa-droplet"></i>
+                        <span>Humidity</span>
+                        <b>{{ humidity }}%</b>
+                    </div>
+                    <div class="weather-item">
+                        <i class="fa-solid fa-wind"></i>
+                        <span>Wind Speed</span>
+                        <b>{{ wind }} km/h</b>
+                    </div>
+                    <div class="weather-item">
+                        <i class="fa-solid fa-cloud-showers-heavy"></i>
+                        <span>Rain Chance</span>
+                        <b>{{ rain }}%</b>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fertilizer Calculator -->
+            <div class="card" style="margin-bottom: 30px;">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-calculator"></i> Quick Fertilizer Estimator</h3>
+                    <span style="font-size: 0.8rem; color: #ccc;">per Acre</span>
+                </div>
+                <div class="calc-form">
+                    <div class="calc-group">
+                        <label>Farm Area (Acre)</label>
+                        <input type="number" id="farmArea" value="1" min="1">
+                    </div>
+                    <div class="calc-group">
+                        <label>Crop Type</label>
+                        <select id="cropSelect" style="padding: 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--glass-border);">
+                            <option value="rice">Rice</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="maize">Maize</option>
+                            <option value="cotton">Cotton</option>
+                        </select>
+                    </div>
+                    <button class="calc-btn" onclick="calculateFertilizer()">Calculate Requirements</button>
+                    <div id="calcResult" class="calc-result"></div>
+                </div>
+            </div>
+
+            <!-- Farming Knowledge -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-book-open"></i> Farming Knowledge</h3>
+                </div>
+                <div class="knowledge-grid">
+                    <div class="knowledge-card">
+                        <h4>Nutrient Balance</h4>
+                        <p>Nitrogen promotes leaf growth, while Phosphorus is key for root development and blooming.</p>
+                    </div>
+                    <div class="knowledge-card">
+                        <h4>pH Importance</h4>
+                        <p>Most crops thrive in pH 6.0-7.5. Outside this range, plants can't absorb nutrients effectively.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h3>
+                    <a href="/history" style="color: var(--light-green); text-decoration: none; font-size: 0.85rem;">View All</a>
+                </div>
+                <div class="activity-tabs">
+                    <ul class="activity-list">
+                        {% for crop in recent_crops %}
+                        <li class="activity-item">
+                            <div class="activity-info">
+                                <h4>Crop Prediction</h4>
+                                <p>{{ crop[6] }}</p>
+                            </div>
+                            <div class="activity-result">🌾 {{ crop[5] }}</div>
+                        </li>
+                        {% endfor %}
+                        
+                        {% for soil in recent_soil %}
+                        <li class="activity-item">
+                            <div class="activity-info">
+                                <h4>Soil Safety Check</h4>
+                                <p>{{ soil[6] }}</p>
+                            </div>
+                            <div class="activity-result">🧪 {{ soil[5] }}</div>
+                        </li>
+                        {% endfor %}
+
+                        {% if not recent_crops and not recent_soil %}
+                        <li class="activity-item" style="justify-content: center; color: #ccc;">
+                            No recent activity found.
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sidebar Area -->
+        <div class="sidebar">
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-bolt"></i> Quick Services</h3>
+                </div>
+                <div class="services-grid">
+                    <a href="/predict" class="service-card" title="Predict suitable crop for your soil">
+                        <i class="fa-solid fa-leaf"></i>
+                        <p>Crop</p>
+                    </a>
+                    <a href="/soil_safety" class="service-card" title="Check soil contamination and health">
+                        <i class="fa-solid fa-vial"></i>
+                        <p>Soil</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Crop Calendar -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-calendar-check"></i> {{ month_name }} Calendar</h3>
+                </div>
+                <div class="calendar-grid">
+                    {% set crop_icons = {
+                        'Rice': 'fa-seedling',
+                        'Chili': 'fa-pepper-hot',
+                        'Tomato': 'fa-apple-whole',
+                        'Sunflower': 'fa-sun',
+                        'Carrot': 'fa-carrot',
+                        'Maize': 'fa-wheat-awn',
+                        'Wheat': 'fa-wheat-awn',
+                        'Mustard': 'fa-spa',
+                        'Gram': 'fa-leaf',
+                        'Peas': 'fa-leaf',
+                        'Potato': 'fa-circle',
+                        'Barley': 'fa-wheat-awn',
+                        'Moong': 'fa-leaf',
+                        'Watermelon': 'fa-fruit-citrus',
+                        'Muskmelon': 'fa-fruit-citrus',
+                        'Cucumber': 'fa-leaf',
+                        'Brinjal': 'fa-leaf',
+                        'Okra': 'fa-leaf',
+                        'Cotton': 'fa-cloud',
+                        'Soybean': 'fa-leaf',
+                        'Groundnut': 'fa-leaf',
+                        'Turmeric': 'fa-leaf',
+                        'Onion': 'fa-circle',
+                        'Radish': 'fa-leaf'
+                    } %}
+                    {% for crop in current_month_crops %}
+                    <div class="calendar-item active">
+                        <i class="fa-solid {{ crop_icons.get(crop, 'fa-seedling') }}"></i>
+                        <span>{{ crop }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <p style="font-size: 0.75rem; color: #ccc; margin-top: 15px; font-style: italic;">Highlighted crops are ideal for planting this month in your region.</p>
+            </div>
+
+            <!-- Farming Tip -->
+            <div class="card tip-card">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Daily Tip</h3>
+                </div>
+                <p>"Crop rotation is essential for maintaining soil fertility and breaking pest cycles. Consider rotating legumes with cereal crops this season for better nitrogen fixation."</p>
+            </div>
+
+            <!-- Seasonal Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-calendar-day"></i> Seasonal Alert</h3>
+                </div>
+                <div style="font-size: 0.9rem; line-height: 1.5;">
+                    <p style="color: var(--light-green); font-weight: 600; margin-bottom: 10px;">Current Season: Pre-Monsoon</p>
+                    <p>It's the perfect time to prepare your soil and clear drainage channels before the heavy rains begin. Check your seed stock now!</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); font-size: 0.8rem; margin-top: auto;">
+        <p>&copy; 2026 AgroXpert. All rights reserved. | Sustainable Farming Companion</p>
+    </footer>
+
+    <script>
+        function calculateFertilizer() {
+            const area = document.getElementById('farmArea').value;
+            const crop = document.getElementById('cropSelect').value;
+            const resultDiv = document.getElementById('calcResult');
+            
+            let n, p, k;
+            if (crop === 'rice') { n = 100; p = 50; k = 50; }
+            else if (crop === 'wheat') { n = 120; p = 60; k = 40; }
+            else if (crop === 'maize') { n = 150; p = 75; k = 60; }
+            else { n = 80; p = 40; k = 40; }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <p><strong>Estimated Fertilizer Needs:</strong></p>
+                <ul style="margin-top: 5px; list-style: inside;">
+                    <li>Nitrogen (N): ${(n * area).toFixed(1)} kg</li>
+                    <li>Phosphorus (P): ${(p * area).toFixed(1)} kg</li>
+                    <li>Potassium (K): ${(k * area).toFixed(1)} kg</li>
+                </ul>
+                <p style="margin-top: 5px; font-size: 0.75rem; color: #ccc;">*These are general estimates. Please consult a local expert.</p>
+            `;
+        }
+    </script>
+</body>
+</html>

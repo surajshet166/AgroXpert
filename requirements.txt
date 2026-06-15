@@ -1,0 +1,9 @@
+Flask
+pandas
+scikit-learn
+tensorflow
+numpy
+Pillow
+twilio
+requests
+openpyxl
