@@ -1,0 +1,250 @@
+/* RESET */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f9;
+    padding-top: 80px;
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #1f2937;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.navbar h2 {
+    margin: 0;
+}
+
+.nav-links a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #4CAF50;
+}
+
+/* DROPDOWN */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 160px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    color: black;
+}
+
+.dropdown-content a:hover {
+    background: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* GRID */
+.grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* SERVICE BOX */
+.service-box {
+    flex: 1 1 30%;
+    min-width: 150px;
+    padding: 20px;
+    background: #f9fafb;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #111;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.service-box:hover {
+    background: #4CAF50;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* BUTTON */
+button {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+    font-size: 1rem;
+}
+
+/* RESULT BOX */
+.result-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #f9fafb;
+    border-left: 5px solid #4CAF50;
+    color: #111;
+}
+
+/* DARK MODE RESULT BOX */
+.dark-mode .result-box {
+    background: #374151;
+    color: white;
+    border-left: 5px solid #4CAF50;
+}
+
+input[readonly] {
+    background-color: white; /* Same as regular inputs in light mode */
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .grid {
+        flex-direction: column;
+    }
+}
+
+/* TWO COLUMN LAYOUT */
+.two-col {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.two-col > * {
+    flex: 1;
+    width: 0; /* Reset width to allow flex-grow to work properly */
+    min-width: 250px; /* Force wrap on mobile */
+}
+
+/* SMALL CARDS */
+.small-card {
+    flex: 1;
+    padding: 15px;
+}
+
+/* MAKE RESPONSIVE */
+@media (max-width: 768px) {
+    .two-col {
+        flex-direction: column;
+    }
+}
+/* DARK MODE */
+.dark-mode {
+    background: #111827;
+    color: white;
+}
+
+/* Cards in dark mode */
+.dark-mode .card {
+    background: #1f2937;
+    color: white;
+}
+
+/* Navbar */
+.dark-mode .navbar {
+    background: #000;
+}
+
+/* Service boxes */
+.dark-mode .service-box {
+    background: #374151;
+    color: white;
+}
+
+/* Inputs */
+.dark-mode input {
+    background: #374151;
+    color: white;
+    border: 1px solid #555;
+}
+
+.dark-mode input[readonly] {
+    background: #374151; 
+    color: #9ca3af; 
+}
+
+/* Button style */
+#modeToggle {
+    margin-left: 20px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+input[type="file"] {
+    margin-top: 10px;
+}
